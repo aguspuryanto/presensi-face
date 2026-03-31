@@ -23,7 +23,12 @@ import {
   Menu,
   X,
   ChevronRight,
-  BarChart3
+  BarChart3,
+  Home,
+  CheckSquare,
+  MessageSquare,
+  BookOpen,
+  User
 } from 'lucide-react';
 import { cn } from './lib/utils';
 import { format, isWithinInterval, parse, startOfDay, endOfDay } from 'date-fns';
@@ -174,38 +179,43 @@ export default function App() {
   }
 
   const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
-    { id: 'attendance', label: 'Presensi', icon: Camera },
-    { id: 'leave', label: 'Izin & Sakit', icon: Calendar },
+    { id: 'dashboard', label: 'Beranda', icon: Home },
+    { id: 'attendance', label: 'Aktivitas', icon: CheckSquare },
+    { id: 'leave', label: 'Tugas', icon: MessageSquare },
   ];
 
   if (profile?.role === 'admin') {
-    navItems.push({ id: 'admin', label: 'Admin Panel', icon: Shield });
+    navItems.push({ id: 'admin', label: 'Pelatihan', icon: BookOpen });
   }
+  
+  // Add Profile to the end
+  navItems.push({ id: 'profile', label: 'Profil', icon: User });
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row pb-20 md:pb-0">
       {/* Mobile Header */}
-      <header className="md:hidden bg-white border-b border-slate-200 p-4 flex items-center justify-between sticky top-0 z-40 shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden">
-            {user.photoURL ? (
-              <img src={user.photoURL} alt={user.displayName || ''} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <UserIcon className="w-5 h-5 text-slate-400" />
-              </div>
-            )}
+      {activeTab !== 'dashboard' && (
+        <header className="md:hidden bg-white border-b border-slate-200 p-4 flex items-center justify-between sticky top-0 z-40 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden">
+              {user.photoURL ? (
+                <img src={user.photoURL} alt={user.displayName || ''} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <UserIcon className="w-5 h-5 text-slate-400" />
+                </div>
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-slate-900 truncate">{user.displayName}</p>
+              <p className="text-xs text-slate-500 truncate capitalize">{profile?.role}</p>
+            </div>
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-slate-900 truncate">{user.displayName}</p>
-            <p className="text-xs text-slate-500 truncate capitalize">{profile?.role}</p>
-          </div>
-        </div>
-        <button onClick={logout} className="p-2 text-red-500 bg-red-50 rounded-full">
-          <LogOut className="w-5 h-5" />
-        </button>
-      </header>
+          <button onClick={logout} className="p-2 text-red-500 bg-red-50 rounded-full">
+            <LogOut className="w-5 h-5" />
+          </button>
+        </header>
+      )}
 
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-72 flex-col fixed inset-y-0 z-40 bg-white border-r border-slate-200">
@@ -267,6 +277,29 @@ export default function App() {
           {activeTab === 'attendance' && <AttendancePage user={user} profile={profile} />}
           {activeTab === 'leave' && <LeavePage user={user} profile={profile} />}
           {activeTab === 'admin' && profile?.role === 'admin' && <AdminPanel />}
+          {activeTab === 'profile' && (
+            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm text-center">
+              <div className="w-24 h-24 mx-auto rounded-full overflow-hidden bg-slate-200 border-4 border-white shadow-lg mb-4">
+                {user.photoURL ? (
+                  <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold text-3xl">
+                    {user.displayName?.charAt(0) || 'U'}
+                  </div>
+                )}
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900">{user.displayName}</h2>
+              <p className="text-slate-500 mb-8 capitalize">{profile?.role}</p>
+              
+              <button
+                onClick={logout}
+                className="w-full max-w-xs mx-auto flex items-center justify-center gap-3 px-6 py-4 bg-red-50 text-red-600 hover:bg-red-100 rounded-2xl transition-all font-bold"
+              >
+                <LogOut className="w-5 h-5" />
+                Keluar dari Akun
+              </button>
+            </div>
+          )}
         </div>
       </main>
 
