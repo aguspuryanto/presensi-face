@@ -1,0 +1,93 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with role and office assignment",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "employee"] },
+        "officeId": { "type": "string" },
+        "shiftId": { "type": "string" },
+        "faceDescriptor": { "type": "array", "items": { "type": "number" } },
+        "photoUrl": { "type": "string" }
+      },
+      "required": ["uid", "name", "email", "role"]
+    },
+    "Office": {
+      "title": "Office",
+      "description": "Office location and radius",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "address": { "type": "string" },
+        "location": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        },
+        "radius": { "type": "number", "description": "Radius in meters" }
+      },
+      "required": ["name", "location", "radius"]
+    },
+    "Shift": {
+      "title": "Shift",
+      "description": "Work shift schedule",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "startTime": { "type": "string", "description": "HH:mm format" },
+        "endTime": { "type": "string", "description": "HH:mm format" },
+        "officeId": { "type": "string" }
+      },
+      "required": ["name", "startTime", "endTime"]
+    },
+    "Attendance": {
+      "title": "Attendance",
+      "description": "Attendance log",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "type": { "type": "string", "enum": ["check-in", "check-out"] },
+        "location": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        },
+        "status": { "type": "string", "enum": ["on-time", "late", "early-out"] },
+        "photoUrl": { "type": "string" },
+        "officeId": { "type": "string" }
+      },
+      "required": ["userId", "timestamp", "type", "location"]
+    },
+    "Leave": {
+      "title": "Leave",
+      "description": "Leave request (Ijin, Sakit, TL)",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "type": { "type": "string", "enum": ["sakit", "ijin", "tl"] },
+        "startDate": { "type": "string", "format": "date" },
+        "endDate": { "type": "string", "format": "date" },
+        "reason": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "attachmentUrl": { "type": "string" }
+      },
+      "required": ["userId", "type", "startDate", "endDate", "reason", "status"]
+    }
+  },
+  "firestore": {
+    "users": { "schema": "User", "description": "User profiles" },
+    "offices": { "schema": "Office", "description": "Office locations" },
+    "shifts": { "schema": "Shift", "description": "Work shifts" },
+    "attendance": { "schema": "Attendance", "description": "Attendance logs" },
+    "leaves": { "schema": "Leave", "description": "Leave requests" }
+  }
+}

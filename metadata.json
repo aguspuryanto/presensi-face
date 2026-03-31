@@ -1,0 +1,8 @@
+{
+  "name": "Presensi Face & Radius",
+  "description": "Sistem presensi kehadiran dengan pengenalan wajah, pembatasan radius lokasi, manajemen shift, dan pengajuan izin/sakit.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}
